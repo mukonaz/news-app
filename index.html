@@ -7,11 +7,13 @@
   <title>News App</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
 </head>
 
 <body>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+    crossorigin="anonymous"></script>
   <nav class="navbar navbar-expand-lg bg-body-tertiary">
     <div class="container-fluid">
       <a class="navbar-brand" href="#">NewsApp</a>
@@ -30,206 +32,114 @@
           <li class="nav-item">
             <a class="nav-link" href="#">Sports</a>
           </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Weather</a>
+          </li>
+
         </ul>
-        <form class="d-flex" role="search" id="search-form">
-          <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" id="search-input">
-          <button class="btn btn-outline-success" type="submit">Search</button>
+        <form class="d-flex" role="search">
+          <input id="searchInput" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+          <button id="search" class="btn btn-outline-success" type="submit">Search</button>
         </form>
       </div>
     </div>
+
+    
   </nav>
 
   <div class="container">
     <h1>Welcome to News App (<span id="resultCount"></span> Result)</h1>
-    <div class="row content" id="news-container">
-      
-    </div>
-  </div>
-  <div class="d-flex justify-content-around">
-    <button class="btn btn-primary" id="prev-page"> < Previous page</button>
-    <button class="btn btn-primary" id="next-page">Next page ></button>
+    <div class="row content"> </div>
+
+  <div class="d-flex justify-content-around my-4" >
+    <button class="btn btn-primary" id="prev">&lt; Previous page</button>
+    <button class="btn btn-primary" id="next">Next page &gt;</button>
   </div>
 
-  
-  <div id="offline-articles" class="container mt-5">
-    <h2>Offline Articles</h2>
-    <div class="row content" id="offline-news-container">
-     
-    </div>
-  </div>
 
+  </div>
   <script>
+
+    let currentQuery ="sport"
     let currentPage = 1;
-    let currentQuery = 'technology';
+const fetchNews = async (page, q) => {
+    console.log(`Fetching news for ${q}, page number ${page}....`)
+    var url = 'https://newsapi.org/v2/everything?' +
+      'q=' +q+
+      '&from=2024-07-20&' + // IT IS NOT AN ERROR THERE IS NO NEWS THAT YOU ARE LOOKING FOR
+      'pageSize=20&' +
+      'language=en&' +    
+      'page=' + page +
+      '&sortBy=popularity&' +
+      'apiKey=b3f8d5b146be4afd88811b2737c399be';
 
+    var req = new Request(url);
+
+    // Data from API updated
+    let a = await fetch(req)
+    let response = await a.json()
+
+    // Data from not API Default News
+    // let response ={"status":"ok","totalResults":1550,"articles":[{"source":{"id":"the-verge","name":"The Verge"},"author":"David Pierce","title":"The history of Roku and the fight over CarPlay","description":"A deep dive into the history of the Roku Netflix Player, plus whether carmakers or Apple and Google should control car software.","url":"https://www.theverge.com/2024/7/30/24205129/roku-netflix-player-carplay-automakers-vergecast","urlToImage":"https://cdn.vox-cdn.com/thumbor/FdRtFf70JUan_37Nz2Bzx4YN4WE=/0x0:2040x1360/1200x628/filters:focal(1020x680:1021x681)/cdn.vox-cdn.com/uploads/chorus_asset/file/25550670/VST_0730_Site.jpg","publishedAt":"2024-07-30T13:02:12Z","content":"Image: Alex Parkin / The Verge\r\n\n \n\n Before Roku was a leading player in the streaming wars, with that ubiquitous purple screensaver and a library of original content and practically every streaming … [+2947 chars]"},{"source":{"id":null,"name":"Gizmodo.com"},"author":"Sherri L Smith","title":"New Apple Patent Suggests Rotating Displays for Future MacBooks","description":"Apple just won a patent for a MacBook with a rotating display and back-mounted camera for making the ultimate conference calls.","url":"https://gizmodo.com/new-apple-patent-suggests-rotating-displays-for-future-macbooks-2000481182","urlToImage":"https://gizmodo.com/app/uploads/2024/03/3cdff6509b1717b274889d5a47fcbcb2.jpg","publishedAt":"2024-07-30T18:45:47Z","content":"Will your next MacBook have a rotating display? According to Patently Apple, it’s definitely possible. Apple recently won a patent for a MacBook with a rotating, detachable screen. The patent also me… [+1414 chars]"},{"source":{"id":null,"name":"MacRumors"},"author":"Hartley Charlton","title":"Apple Used Google Tensor Chips to Develop Apple Intelligence","description":"Apple used Tensor Processing Units (TPUs) developed by Google instead of Nvidia's widely-used graphics processing units (GPUs) to construct two critical components of Apple Intelligence.\n\n\n\n\n\nThe decision is detailed in a new research paper published by Apple…","url":"https://www.macrumors.com/2024/07/30/google-chips-used-to-develop-apple-intelligence/","urlToImage":"https://images.macrumors.com/t/eNxYmCA1u77ZdJovI2KACUQ_lN0=/2500x/article-new/2024/06/Apple-Intelligence-General-Feature.jpg","publishedAt":"2024-07-30T12:56:09Z","content":"Apple used Tensor Processing Units (TPUs) developed by Google instead of Nvidia's widely-used graphics processing units (GPUs) to construct two critical components of Apple Intelligence.\r\nThe decisio… [+2055 chars]"},{"source":{"id":null,"name":"Yahoo Entertainment"},"author":"Mat Smith","title":"The Morning After: Mark Zuckerberg is surprisingly angry about closed platforms","description":"In a fireside chat on Monday between NVIDIA CEO Jensen Huang and Meta CEO Mark Zuckerberg at the SIGGRAPH 2024, the latter dropped the f-bomb. After exchanging leather jackets (apparently two billionaires can’t get custom-made jackets that fit), the two talke…","url":"https://consent.yahoo.com/v2/collectConsent?sessionId=1_cc-session_2719d624-41f4-432a-94da-9c77eb3f052b","urlToImage":null,"publishedAt":"2024-07-30T11:57:16Z","content":"If you click 'Accept all', we and our partners, including 237 who are part of the IAB Transparency &amp; Consent Framework, will also store and/or access information on a device (in other words, use … [+678 chars]"},{"source":{"id":null,"name":"CNET"},"author":"Zachary McAuliffe","title":"iOS 17.6: Why This Could Be Apple's Last Update Before iOS 18","description":"Apple said the update is recommended for all users.","url":"https://www.cnet.com/tech/services-and-software/ios-17-6-why-this-could-be-apples-last-update-before-ios-18/","urlToImage":"https://www.cnet.com/a/img/resize/7a40b7bbd60a407d60106719a4f2cf2173a4b728/hub/2024/04/02/2cdfd73b-c65e-4ef9-9fef-7eb94b7b1136/ios-17-name-tri.jpg?auto=webp&fit=crop&height=675&width=1200","publishedAt":"2024-07-30T17:13:23Z","content":"Apple released iOS 17.6 on Monday, the same day it released the second public beta for iOS 18 and the first developer beta of iOS 18.1. The tech giant wrote in the update's release notes that it's re… [+2161 chars]"},{"source":{"id":null,"name":"ReadWrite"},"author":"James Jones","title":"Apple Watch X Rumors: Bigger screens, new chip, cheaper SE model","description":"As we approach the tenth anniversary of the Apple Watch, everyone’s building up to the expected launch of the Apple… Continue reading Apple Watch X Rumors: Bigger screens, new chip, cheaper SE model\nThe post Apple Watch X Rumors: Bigger screens, new chip, che…","url":"https://readwrite.com/apple-watch-10-rumors-bigger-screens-new-chip-cheaper-se-model/","urlToImage":"https://readwrite.com/wp-content/uploads/2024/07/Apple-Watch-S9-hero-230912_Full-Bleed-Image.jpg.large_.jpg","publishedAt":"2024-07-30T14:35:45Z","content":"As we approach the tenth anniversary of the Apple Watch, everyones building up to the expected launch of the Apple Watch 10.\r\nIn some corners of the internet, its being labeled as the Apple Watch X, … [+5040 chars]"},{"source":{"id":null,"name":"Yahoo Entertainment"},"author":"Lawrence Bonk","title":"Apple’s AirPods Pro are on sale for $180 right now","description":"Apple’s AirPods Pro high-end earbuds are on sale via Amazon for just $180. That’s a discount of nearly 30 percent and nearly matches a record-low price. This deal is for the most-recent second-generation device. \n\n \r\n \nThere’s a reason why these earbuds are t…","url":"https://consent.yahoo.com/v2/collectConsent?sessionId=1_cc-session_c5925a92-74e2-48f5-af15-30959c92a685","urlToImage":null,"publishedAt":"2024-07-30T15:09:52Z","content":"If you click 'Accept all', we and our partners, including 237 who are part of the IAB Transparency &amp; Consent Framework, will also store and/or access information on a device (in other words, use … [+678 chars]"},{"source":{"id":null,"name":"[Removed]"},"author":null,"title":"[Removed]","description":"[Removed]","url":"https://removed.com","urlToImage":null,"publishedAt":"1970-01-01T00:00:00Z","content":"[Removed]"},{"source":{"id":null,"name":"CNET"},"author":"Oliver Haslam","title":"Bestseller Apple Watch Series 9 Falls to $329 at Amazon","description":"A solid $70 discount has returned to one of our favorite smartwatches, making it a great time to snag one for yourself.","url":"https://www.cnet.com/deals/best-seller-apple-watch-series-9-falls-to-329-at-amazon/","urlToImage":"https://www.cnet.com/a/img/resize/12c24789127022f3a6ac9167e23484c5e78ec42b/hub/2024/07/30/85ea7d16-6137-4a47-9808-bfbdeac57b10/apple-watch-series9-pink-commerce-image.jpg?auto=webp&fit=crop&height=675&width=1200","publishedAt":"2024-07-30T13:57:00Z","content":"After briefly dropping in price during recent shopping events, the Apple Watch Series 9 has unexpectedly been reduced once again at Amazon. As our pick for the best smartwatch overall for 2024, this … [+1358 chars]"},{"source":{"id":null,"name":"CNET"},"author":"Zachary McAuliffe","title":"Want to Try iOS 18 Now? Here's All You Need to Know About the Public Beta","description":"Public beta testers can try the update now, and Apple will release the update to the general public this fall.","url":"https://www.cnet.com/tech/services-and-software/want-to-try-ios-18-now-heres-all-you-need-to-know-about-the-public-beta/","urlToImage":"https://www.cnet.com/a/img/resize/8bc5f73328278700c9e7016611c1b66a6cb2a57a/hub/2024/03/29/e8e5e6e1-afcd-44fd-b26b-a85a6517ed09/ios18.png?auto=webp&fit=crop&height=675&width=1200","publishedAt":"2024-07-30T10:00:08Z","content":"At Apple's Worldwide Developers Conference in June, the company said it will release iOS 18 to the general public this fall. But it already released the iPhone update to developers and beta testers s… [+1421 chars]"},{"source":{"id":"business-insider","name":"Business Insider"},"author":"Jordan Hart","title":"Apple appears to have just shunned Nvidia again","description":"Apple's latest research paper revealed its use of Google chips for training iPhone AI, seemingly instead of Nvidia's GPUs.","url":"https://www.businessinsider.com/apple-appears-to-have-shunned-nvidia-chips-for-google-ai-2024-7","urlToImage":"https://i.insider.com/66a9159bfb6d32635ee4f9a9?width=1200&format=jpeg","publishedAt":"2024-07-30T20:01:28Z","content":"Nvidia might be in high demand, but it's unclear if it's the first choice for Apple.Justin Sullivan/Getty Images\r\n<ul><li>It appears that Apple opted for Google's TPU chips over Nvidia's for its AI d… [+1737 chars]"},{"source":{"id":null,"name":"CNET"},"author":"Adam Oram","title":"Apple AirPods 2 Can Be Yours for Just $70 at Amazon, for Now","description":"Apple AirPods 2 are now within just $1 of their low Prime Day price. Act fast to save a whopping $59 on these prized earbuds.","url":"https://www.cnet.com/deals/apple-airpods-2-can-be-yours-for-just-70-at-amazon-for-now/","urlToImage":"https://www.cnet.com/a/img/resize/7dcd75742f4100ffa6e14c47b43edcf73a0873fe/hub/2024/04/29/60ef6a6a-edcb-423b-9431-f10a7a3db66d/apple-airpods-2nd-gen.png?auto=webp&fit=crop&height=675&width=1200","publishedAt":"2024-07-30T13:10:47Z","content":"There were some great AirPods deals available during Prime Day, enabling people to get Apple's top notch wireless earbuds for quite a bit less than usual. If you missed out, you can still save on the… [+1426 chars]"},{"source":{"id":null,"name":"MacRumors"},"author":"Hartley Charlton","title":"Apple Vision Pro Can Now Be Controlled With Brain-Computer Interface","description":"Apple's Vision Pro headset can now be controlled using only thoughts, thanks to integration with neurotechnology startup Synchron's brain-computer interface (BCI).\n\n\n\n\n\nThe company today announced that Apple Vision Pro has been successfully used by a patient …","url":"https://www.macrumors.com/2024/07/30/vision-pro-can-now-be-controlled-with-brain/","urlToImage":"https://images.macrumors.com/t/0oV_CZEzUhcV5Q_q8sJ2qo9gG2c=/2500x/article-new/2024/03/apple-vision-pro-orange.jpg","publishedAt":"2024-07-30T13:54:54Z","content":"Apple's Vision Pro headset can now be controlled using only thoughts, thanks to integration with neurotechnology startup Synchron's brain-computer interface (BCI).\r\nThe company today announced that A… [+2253 chars]"},{"source":{"id":null,"name":"MacRumors"},"author":"Juli Clover","title":"Emergency SOS via Satellite Launches in Japan","description":"Emergency SOS via satellite expanded to Japan with the iOS 17.6 update that was released yesterday, according to Apple. Japanese customers with an iPhone 14 or an iPhone 15 can use Emergency SOS via satellite to get in touch with emergency services even when …","url":"https://www.macrumors.com/2024/07/30/emergency-sos-via-satellite-japan/","urlToImage":"https://images.macrumors.com/t/sl4cLqCAG09TnCM8NoCaCwZZM24=/2900x/article-new/2024/07/japan-emergency-sos-via-satellite.jpg","publishedAt":"2024-07-30T19:45:45Z","content":"Emergency SOS via satellite expanded to Japan with the iOS 17.6 update that was released yesterday, according to Apple. Japanese customers with an iPhone 14 or an iPhone 15 can use Emergency SOS via … [+1376 chars]"},{"source":{"id":null,"name":"CNET"},"author":"Zachary McAuliffe","title":"These 2 Apps Let You Easily Stream Almost Any Show With Friends","description":"Watch with your friends and family from across the country or across the room.","url":"https://www.cnet.com/tech/services-and-software/these-two-apps-let-you-stream-almost-any-show-with-friends/","urlToImage":"https://www.cnet.com/a/img/resize/08a22da31c9bf8ee18db72521f1881bc71971fcd/hub/2024/05/01/c1f8c287-1698-444b-83e9-dee5a4599522/hulu-max-netflix-streaming-services-9624.jpg?auto=webp&fit=crop&height=675&width=1200","publishedAt":"2024-07-30T10:00:03Z","content":"Streaming accounts for about 38% of all TV usage, according to Nielsen, making it the most popular way to watch TV shows. Streaming watch parties make it easy to enjoy a show with a friend who lives … [+3972 chars]"},{"source":{"id":null,"name":"Gizmodo.com"},"author":"Kyle Barr","title":"The Best Android Feature Is Coming to Chrome","description":"Soon, you'll see a new ‘Lens’ icon on Chrome browsers and Chromebooks that lets you do a quick search by any text or images on a webpage.","url":"https://gizmodo.com/circle-to-search-is-coming-to-chrome-on-pc-2000481109","urlToImage":"https://gizmodo.com/app/uploads/2024/05/60c1871bd8d881c26983433c1c3b9517.jpg","publishedAt":"2024-07-30T14:25:50Z","content":"Google has had a lot of success with its Circle to Search feature on Android phones, so much so that it’s bringing that quick-access Google Lens-like capability to Chrome. Its currently in beta, but … [+2366 chars]"},{"source":{"id":null,"name":"Apple Newsroom"},"author":null,"title":"Apple Intelligence Foundation Language Models","description":"We present foundation language models developed to power Apple Intelligence features, including a ∼3 billion parameter model designed to run…","url":"https://machinelearning.apple.com/research/apple-intelligence-foundation-language-models","urlToImage":"https://mlr.cdn-apple.com/media/Home_1200x630_48225d82e9.png","publishedAt":"2024-07-30T16:25:02Z","content":"We present foundation language models developed to power Apple Intelligence features, including a 3 billion parameter model designed to run efficiently on devices and a large server-based language mo… [+556 chars]"},{"source":{"id":null,"name":"9to5Mac"},"author":"Bradley Chambers","title":"Apple @ Work Podcast: It works 93% of the time","description":"Apple @ Work is exclusively brought to you by Mosyle, the only Apple Unified Platform. Mosyle is the only solution that integrates in a single professional-grade platform all the solutions necessary to seamlessly and automatically deploy, manage & protect App…","url":"https://9to5mac.com/2024/07/30/apple-work-podcast-it-works-93-of-the-time/","urlToImage":"https://i0.wp.com/9to5mac.com/wp-content/uploads/sites/6/2024/01/Apple-At-Work-FI.png?resize=1200%2C628&quality=82&strip=all&ssl=1","publishedAt":"2024-07-30T10:00:00Z","content":"Apple @ Work is exclusively brought to you by Mosyle, the only Apple Unified Platform. Mosyle is the only solution that integrates in a single professional-grade platform all the solutions necessary … [+505 chars]"},{"source":{"id":null,"name":"ReadWrite"},"author":"Suswati Basu","title":"Everything we know so far about the iPhone 17: price, release date, features","description":"Apple is reportedly taking a bold step with its new ultra-slim model ahead of the release of its iPhone 16… Continue reading Everything we know so far about the iPhone 17: price, release date, features\nThe post Everything we know so far about the iPhone 17: p…","url":"https://readwrite.com/iphone-17-guide-price-release-date-specs/","urlToImage":"https://readwrite.com/wp-content/uploads/2024/07/Everything-we-know-so-far-about-the-iPhone-17-including-price-release-date-and-features.png","publishedAt":"2024-07-30T18:00:55Z","content":"Apple is reportedly taking a bold step with its new ultra-slim model ahead of the release of its iPhone 16 lineup. Slated for 2025, rumors about the iPhone 17 have already begun circulating, suggesti… [+4788 chars]"},{"source":{"id":null,"name":"heise online"},"author":"Inge Schwabe","title":"heise-Angebot: Webinar-Serie Geräteverwaltung in Unternehmen: Apple Business Manager und MDM","description":"Lernen Sie an zwei Terminen im September, wie Sie mit Apple Business Manager und MDM Apple-Geräte im Unternehmen effizient verwalten.","url":"https://www.heise.de/news/Webinar-Serie-Geraeteverwaltung-in-Unternehmen-Apple-Business-Manager-und-MDM-9817876.html","urlToImage":"https://heise.cloudimg.io/bound/1200x1200/q85.png-lossy-85.webp-lossy-85.foil1/_www-heise-de_/imgs/18/4/6/4/2/5/3/0/Grundlagen-MDM-Ticker-Header-16-9-18ef9bd3e697d5cc.jpg","publishedAt":"2024-07-30T12:00:00Z","content":"In zwei Live-Webinaren zu Apple Business Manager und MDM lernen Sie, wie Sie den Apple Business Manager optimal nutzen und ein Mobile Device Management (MDM) erfolgreich implementieren. Die Webinar-S… [+1682 chars]"}]}
     
-    const fetchNews = async (page, query) => {
-      const url = `https://newsapi.org/v2/top-headlines?country=us&category=business&apiKey=b3f8d5b146be4afd88811b2737c399be`;
+  
+    let str = ""
 
-      try {
-        const response = await fetch(url);
-        const data = await response.json();
-        console.log(JSON.stringify(data));
+    resultCount.innerHTML = response.totalResults
 
-        if (data.status === "ok") {
-          document.getElementById('resultCount').innerText = data.totalResults;
-          displayNews(data.articles);
-        } else {
-          console.error("Error fetching news:", data);
-        }
-      } catch (error) {
-        console.error("Error fetching news:", error);
+      for (let item of response.articles){
+        str = str +`<div class="card my-4 mx-2" style="width: 18rem;">
+        <img height="184" src="${item.urlToImage}" class="card-img-top" alt="..."/>
+        <div class="card-body">
+          <h5 class="card-title">${item.title.slice(0,23)}</h5>
+          <p class="card-text">${item.description.slice(0,60)}...</p>
+          <a href="${item.url}" target="_blank" class="btn btn-primary">Read Article</a>
+          
+        </div>
+      </div>`
       }
-    };
-
-    
-    const truncateText = (text, length) => {
-      if (text.length > length) {
-        return text.substring(0, length) + '...';
+// puting the news inside the contaner
+document.querySelector(".content").innerHTML = str
+    }
+    fetchNews(1, currentQuery)
+    search.addEventListener("click", (e)=>{
+      e.preventDefault()
+      let query = searchInput.value;
+      currentQuery = query  
+      fetchNews(1, query)
+    })
+    prev.addEventListener("click", (e)=>{
+      e.preventDefault()
+      if(currentPage>1){
+        currentPage= currentPage - 1
+      fetchNews(currentPage, currentQuery)
       }
-      return text;
-    };
+      
+    })
+    next.addEventListener("click", (e)=>{
+      e.preventDefault()
+      currentPage= currentPage + 1
+      fetchNews(currentPage, currentQuery)
+    })
+    // const fetchNews = async (page) => {
+    //   console.log("hello");
+    //   var url = 'https://newsapi.org/v2/top-headlines?country=us&category=business&apiKey=b3f8d5b146be4afd88811b2737c399be' +
+    //     'q=Apple&' +
+    //     'from=2024-07-30&' +
+    //     'pageSize=20&' +
+    //     'page=' + page +
+    //     'sortBy=popularity&' +
+    //     'apiKey=b3f8d5b146be4afd88811b2737c399be';
 
-    
-    const displayNews = (articles) => {
-      const newsContainer = document.getElementById('news-container');
-      newsContainer.innerHTML = '';
+    //   var req = new Request(url);
 
-      if (articles.length === 0) {
-        newsContainer.innerHTML = '<p>No news articles found.</p>';
-        return;
-      }
-
-      articles.forEach(article => {
-        const description = article.description ? truncateText(article.description, 100) : 'No description available.';
-        const newsCard = `
-          <div class="card my-4 mx-2" style="width: 18rem;">
-            <img src="${article.urlToImage || 'placeholder.jpg'}" class="card-img-top" alt="${article.title}">
-            <div class="card-body">
-              <h5 class="card-title">${article.title}</h5>
-              <p class="card-text">${description}</p>
-              <a href="${article.url}" class="btn btn-primary" target="_blank">Read more</a>
-              <button class="btn btn-secondary mt-2" onclick='bookmarkArticle(${JSON.stringify(article)})'>Bookmark</button>
-              <button class="btn btn-info mt-2" onclick='shareArticle("${article.url}", "${article.title}")'>Share</button>
-              <button class="btn btn-warning mt-2" onclick='saveArticleForOffline(${JSON.stringify(article)})'>Save for Offline</button>
-            </div>
-          </div>`;
-        newsContainer.insertAdjacentHTML('beforeend', newsCard);
-      });
-    };
-
-    
-    const bookmarkArticle = (article) => {
-      let bookmarks = JSON.parse(localStorage.getItem('bookmarks')) || [];
-      if (!bookmarks.find(bookmark => bookmark.url === article.url)) {
-        bookmarks.push(article);
-        localStorage.setItem('bookmarks', JSON.stringify(bookmarks));
-        alert('Article bookmarked!');
-      } else {
-        alert('Article already bookmarked.');
-      }
-    };
-
-    
-    const shareArticle = (url, title) => {
-      if (navigator.share) {
-        navigator.share({
-          title: title,
-          url: url
-        }).then(() => console.log('Thanks for sharing!'))
-        .catch(console.error);
-      } else {
-        alert('Sharing not supported');
-      }
-    };
-
-    
-    const saveArticleForOffline = (article) => {
-      const request = indexedDB.open('newsAppDB', 1);
-
-      request.onupgradeneeded = (event) => {
-        const db = event.target.result;
-        db.createObjectStore('articles', { keyPath: 'url' });
-      };
-
-      request.onsuccess = (event) => {
-        const db = event.target.result;
-        const transaction = db.transaction('articles', 'readwrite');
-        const store = transaction.objectStore('articles');
-        store.put(article);
-        alert('Article saved for offline reading!');
-        displayOfflineArticles(); 
-      };
-    };
-
-    
-    const displayOfflineArticles = () => {
-      const offlineContainer = document.getElementById('offline-news-container');
-      offlineContainer.innerHTML = '';
-
-      const request = indexedDB.open('newsAppDB', 1);
-
-      request.onsuccess = (event) => {
-        const db = event.target.result;
-        const transaction = db.transaction('articles', 'readonly');
-        const store = transaction.objectStore('articles');
-        const allArticles = store.getAll();
-        allArticles.onsuccess = () => {
-          const articles = allArticles.result;
-          if (articles.length === 0) {
-            offlineContainer.innerHTML = '<p>No offline articles available.</p>';
-            return;
-          }
-
-          articles.forEach(article => {
-            const description = article.description ? truncateText(article.description, 100) : 'No description available.';
-            const newsCard = `
-              <div class="card my-4 mx-2" style="width: 18rem;">
-                <img src="${article.urlToImage || 'placeholder.jpg'}" class="card-img-top" alt="${article.title}">
-                <div class="card-body">
-                  <h5 class="card-title">${article.title}</h5>
-                  <p class="card-text">${description}</p>
-                  <a href="${article.url}" class="btn btn-primary" target="_blank">Read more</a>
-                </div>
-              </div>`;
-            offlineContainer.insertAdjacentHTML('beforeend', newsCard);
-          });
-        };
-      };
-    };
+    //   let a = await fetch(req)
+    //   let response = await a.json()
+    //   console.log(JSON.stringify(response));
 
   
-    document.getElementById('prev-page').addEventListener('click', () => {
-      if (currentPage > 1) {
-        currentPage--;
-        fetchNews(currentPage, currentQuery);
-      }
-    });
-
-    document.getElementById('next-page').addEventListener('click', () => {
-      currentPage++;
-      fetchNews(currentPage, currentQuery);
-    });
-
-    document.getElementById('search-form').addEventListener('submit', (event) => {
-      event.preventDefault();
-      currentQuery = document.getElementById('search-input').value;
-      currentPage = 1; // Reset to first page on search
-      fetchNews(currentPage, currentQuery);
-    });
-
-    // Initialize the app
-    fetchNews(currentPage, currentQuery);
-    displayOfflineArticles();
-
-    // Service Worker registration (basic setup)
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/service-worker.js').then(registration => {
-        console.log('Service Worker registered with scope:', registration.scope);
-      }).catch(error => {
-        console.error('Service Worker registration failed:', error);
-      });
-    }
+    // }
+    
   </script>
 </body>
 
